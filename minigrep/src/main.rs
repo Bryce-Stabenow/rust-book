@@ -1,7 +1,7 @@
 use std::env;
-use std::fs;
 use std::process;
-use std::error::Error;
+
+use minigrep::Args;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -12,34 +12,8 @@ fn main() {
             process::exit(1);
         });
 
-    run(args);
-}
-
-
-fn run(args: Args) -> Result<(), Box<dyn Error>>{
-    let file_contents: String = fs::read_to_string(args.file_path)?;
-
-    println!("{}", file_contents);
-
-    Ok(())
-}
-
-
-struct Args {
-    query: String,
-    file_path: String
-}
-
-
-impl Args {
-    fn build(args: &[String]) -> Result<Args, &'static str> {
-        if args.len() != 3 {
-            return Err("Usage: minigrep <query> <file_path>");
-        }
-
-        Ok(Args {
-            query: args[1].clone(),
-            file_path: args[2].clone()
-        })
-    }
+    if let Err(e) = minigrep::run(args) {
+        println!("{}", e);
+        process::exit(1);
+    };
 }
