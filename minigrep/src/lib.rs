@@ -57,14 +57,22 @@ pub struct Args {
 
 
 impl Args {
-    pub fn build(args: &[String]) -> Result<Args, &'static str> {
-        if args.len() != 3 {
-            return Err("Usage: minigrep <query> <file_path>");
-        }
+    pub fn build(mut args: impl Iterator<Item  = String>) -> Result<Args, &'static str> {
+        args.next();
+
+        let query = match args.next() {
+            Some(arg) => arg,
+            None => return Err("Didn't get a query string"),
+        };
+
+        let file_path = match args.next() {
+            Some(arg) => arg,
+            None => return Err("Didn't get a file path"),
+        };
 
         Ok(Args {
-            query: args[1].clone(),
-            file_path: args[2].clone(),
+            query,
+            file_path,
             case_insensitive: env::var("IGNORE_CASE").is_ok(),
         })
     }
