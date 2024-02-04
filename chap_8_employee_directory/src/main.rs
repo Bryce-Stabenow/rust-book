@@ -1,12 +1,12 @@
+use std::collections::HashMap;
 use std::io::{self, Write};
 use std::process::Command;
-use std::collections::HashMap;
 
 fn main() {
     let mut directory: HashMap<String, Vec<String>> = HashMap::new();
     clear_terminal();
 
-    loop{
+    loop {
         print_welcome();
         print_commands();
 
@@ -26,17 +26,16 @@ fn main() {
             _ => {
                 println!("Unknown command");
                 continue;
-            },
+            }
         }
     }
 }
 
-
-fn add_department(directory: &mut HashMap<String, Vec<String>>){
+fn add_department(directory: &mut HashMap<String, Vec<String>>) {
     print!("What is the name of this new department? ");
     io::stdout().flush().unwrap();
 
-    loop{
+    loop {
         let mut new_dir: String = String::new();
 
         io::stdin()
@@ -49,7 +48,7 @@ fn add_department(directory: &mut HashMap<String, Vec<String>>){
             Some(_) => {
                 println!("Department already exists! Please enter another name");
                 continue;
-            },
+            }
             None => (),
         }
 
@@ -61,12 +60,11 @@ fn add_department(directory: &mut HashMap<String, Vec<String>>){
     }
 }
 
-
-fn add_employee(directory: &mut HashMap<String, Vec<String>>){
+fn add_employee(directory: &mut HashMap<String, Vec<String>>) {
     // TODO find a better way to do this without clone(). This isn't optimal
     let department: String = choose_department(directory.clone().into_keys().collect());
 
-    loop{
+    loop {
         let mut new_emp: String = String::new();
 
         print!("Employee name: ");
@@ -82,12 +80,12 @@ fn add_employee(directory: &mut HashMap<String, Vec<String>>){
         match department_vec {
             Some(_) => {
                 department_vec.unwrap().push(new_emp.clone());
-            },
+            }
             None => {
                 clear_terminal();
                 println!("Error, returning to main menu");
                 return;
-            },
+            }
         }
 
         clear_terminal();
@@ -96,8 +94,7 @@ fn add_employee(directory: &mut HashMap<String, Vec<String>>){
     }
 }
 
-
-fn list_employees(directory: &HashMap<String, Vec<String>>){
+fn list_employees(directory: &HashMap<String, Vec<String>>) {
     let department: String = choose_department(directory.clone().into_keys().collect());
 
     let department_vec: Option<&Vec<String>> = directory.get(&department);
@@ -105,30 +102,28 @@ fn list_employees(directory: &HashMap<String, Vec<String>>){
     match department_vec {
         Some(_) => {
             clear_terminal();
-            for name in department_vec.unwrap(){
+            for name in department_vec.unwrap() {
                 println!("{} Employee(s):", department);
                 println!("{}", name);
             }
             println!();
-        },
+        }
         None => {
             clear_terminal();
             println!("Error, returning to main menu");
             return;
-        },
+        }
     }
-    
 }
 
-
-fn choose_department(departments: Vec<String>) -> String{
-    loop{
+fn choose_department(departments: Vec<String>) -> String {
+    loop {
         println!("Choose a department:");
 
-        for dep in &departments{
+        for dep in &departments {
             print!("  {}  |", dep);
         }
-        
+
         print!("\nSelection: ");
         io::stdout().flush().unwrap();
 
@@ -147,30 +142,29 @@ fn choose_department(departments: Vec<String>) -> String{
     }
 }
 
-
-fn print_welcome(){
+fn print_welcome() {
     println!("======|| CRAB CORP. EMPLOYEE DIRECTORY ||======");
-    println!("                   __       __
+    println!(
+        "                   __       __
                   / <`     '> \\
                  (  / @   @ \\  )
                   \\(_ _\\_/_ _)/
                 (\\ `-/     \\-' /)
                 ''===\\     /===''
                   .==')___(`==.
-                 ' .='     `=.");
+                 ' .='     `=."
+    );
     println!();
 }
 
-
-fn print_commands(){
+fn print_commands() {
     println!("[D] Add a new department");
     println!("[E] Add a new employee to a department");
     println!("[L] List all employees in a department");
     println!("[Q]uit");
 }
 
-
-fn clear_terminal(){
+fn clear_terminal() {
     Command::new("clear")
         .status()
         .expect("Error clearing console");
