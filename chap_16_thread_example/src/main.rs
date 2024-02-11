@@ -1,24 +1,23 @@
-use std::{sync::mpsc, thread, time::Duration};
+use std::{sync::{Arc, Mutex}, thread};
 
 fn main() {
-    let (tx, rx) = mpsc::channel();
-    let tx2: mpsc::Sender<i32> = tx.clone();
-
-    thread::spawn( move || {
-        for i in 1..=10000 {
-            tx.send(i).unwrap();
-            thread::sleep(Duration::from_nanos(1));
-        }
-    });
-
-    thread::spawn( move || {
-        for i in 1..=5000 {
-            tx2.send(i).unwrap();
-            thread::sleep(Duration::from_nanos(1));
-        }
-    });
-
-    for message in rx {
-        println!("Handler: number {}", message);
+    let count: Arc<Mutex<i32>> = Arc::new(Mutex::new(0));
+    
+    for _ in 0..100 {    
+        let count1 = count.clone();
+        thread::spawn(move || {
+                let mut arr = count1.lock().unwrap();
+                *arr += 1
+            });
     }
+
+    for _ in 0..50 {
+    let count2 = Arc::clone(&count);
+    thread::spawn(move || {
+            let mut arr = count2.lock().unwrap();
+            *arr += 1;
+        });
+    }
+    
+    println!("Count of {}", count.lock().unwrap());
 }
