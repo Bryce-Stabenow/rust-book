@@ -1,16 +1,22 @@
-use std::thread;
-use std::time::Duration;
+use std::{sync::mpsc, thread};
 
 fn main() {
-    thread::spawn(|| {
-        for i in 1..10000 {
-            println!("Thread: number {}", i);
-            thread::sleep(Duration::from_millis(1));
+    let (tx, rx) = mpsc::channel();
+    let tx2: mpsc::Sender<i32> = tx.clone();
+
+    thread::spawn( move || {
+        for i in 1..=1000 {
+            tx.send(i).unwrap();
         }
     });
 
-    for i in 1..5000 {
-        println!("Main: number {}", i);
-        thread::sleep(Duration::from_millis(1));
+    thread::spawn( move || {
+        for i in 1..=500 {
+            tx2.send(i).unwrap();
+        }
+    });
+
+    for message in rx {
+        println!("Handler: number {}", message);
     }
 }
