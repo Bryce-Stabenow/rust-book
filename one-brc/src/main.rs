@@ -30,6 +30,7 @@ fn main() {
     let data: File = File::open("data.txt").unwrap();
     let data: std::io::Lines<BufReader<File>> = BufReader::new(data).lines();
 
+    // TODO: Move this into threads, messages populate into tree and then output
     for line in data {
         let line: String = line.unwrap();
         let (location, temp) = line.split_once(';').unwrap();
@@ -39,6 +40,8 @@ fn main() {
             temp: temp.parse::<f64>().expect("invalid datapoint"),
         };
 
+        // Once inside a thread, we don't need to calculate this out.
+        // We'll have the main thread take care of this work
         let l: &mut LocationData = results.entry(point.location).or_insert(LocationData {
             min: 101.0,
             max: -101.0,
