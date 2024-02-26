@@ -1,7 +1,7 @@
 use std::collections::BTreeMap;
-use std::io::BufReader;
-use std::io::prelude::*;
 use std::fs::File;
+use std::io::prelude::*;
+use std::io::BufReader;
 
 fn main() {
     struct LocationData {
@@ -12,7 +12,7 @@ fn main() {
     }
 
     impl LocationData {
-        fn mean (&self) -> f64 {
+        fn mean(&self) -> f64 {
             self.total / self.count as f64
         }
     }
@@ -31,14 +31,17 @@ fn main() {
         let line: String = line.unwrap();
         let (location, temp) = line.split_once(';').unwrap();
 
-        let point: DataPoint = DataPoint{
+        let point: DataPoint = DataPoint {
             location: location.to_string(),
             temp: temp.parse::<f64>().expect("invalid datapoint"),
         };
 
-        let l: &mut LocationData = results.entry(point.location)
-            .or_insert(LocationData{min: 101.0, max: -101.0, total: 0.0, count: 0});
-
+        let l: &mut LocationData = results.entry(point.location).or_insert(LocationData {
+            min: 101.0,
+            max: -101.0,
+            total: 0.0,
+            count: 0,
+        });
 
         if l.min > point.temp {
             l.min = point.temp;
@@ -51,6 +54,12 @@ fn main() {
     }
 
     for (name, data) in results {
-        println!("{}={:.1}/{:.1}/{:.1}\n", name, data.min, data.mean(), data.max)
+        println!(
+            "{}={:.1}/{:.1}/{:.1}\n",
+            name,
+            data.min,
+            data.mean(),
+            data.max
+        )
     }
 }
