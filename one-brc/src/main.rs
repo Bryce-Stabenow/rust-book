@@ -2,8 +2,11 @@ use std::collections::BTreeMap;
 use std::fs::File;
 use std::io::prelude::*;
 use std::io::BufReader;
+use std::time::Instant;
 
 fn main() {
+    let now = Instant::now();
+
     struct LocationData {
         min: f64,
         max: f64,
@@ -62,4 +65,6 @@ fn main() {
             data.max
         )
     }
+
+    println!("Runtime: {:.8?}", now.elapsed()); // Current runtime with data.txt = 4.73093950s
 }
