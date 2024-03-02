@@ -1,20 +1,11 @@
-use std::{io::{prelude::*, BufReader}, net::{TcpListener, TcpStream}};
+use std::{
+    io::{prelude::*, BufReader},
+    net::{TcpListener, TcpStream}
+};
+
+use chap_20_web_server::ThreadPool;
 
 fn main() {
-    struct ThreadPool;
-
-    impl ThreadPool {
-        fn new(count: u32) -> ThreadPool{
-            assert!(count > 0);
-            
-            ThreadPool
-        }
-
-        fn execute<F>(&self, f: F) where F:FnOnce() + Send + 'static {
-
-        }
-    }
-
     let server_address = "127.0.0.1:7878";
     let listener: TcpListener = TcpListener::bind(server_address)
         .expect(format!("Unable to listen at {server_address}").as_str());
@@ -29,7 +20,8 @@ fn main() {
 
 fn handle_request(mut data: TcpStream) {
     let buf_reader: BufReader<&mut TcpStream> = BufReader::new(&mut data);
-    let http_request: Vec<_> = buf_reader.lines()
+    let http_request: Vec<_> = buf_reader
+        .lines()
         .map(|result| result.unwrap())
         .take_while(|line| !line.is_empty())
         .collect();
