@@ -4,8 +4,10 @@ use std::io::prelude::*;
 use std::io::BufReader;
 use std::sync::mpsc;
 use std::thread;
+use std::thread::JoinHandle;
 use std::time::Instant;
 
+#[derive(Debug)]
 struct LocationData {
     min: f64,
     max: f64,
@@ -28,6 +30,7 @@ fn main() {
     let now = Instant::now();
 
     let (tx, rx) = mpsc::channel::<DataPoint>();
+    let mut handles: Vec<JoinHandle<()>> = vec![];
 
     let mut results: BTreeMap<String, LocationData> = BTreeMap::new();
 
@@ -37,8 +40,11 @@ fn main() {
     for line in data {
         let sender = tx.clone();
 
-        thread::spawn(move || {
+        let handle = thread::spawn(move || {
             let line: String = line.unwrap();
+
+            println!("{}", line);
+
             let (location, temp) = line.split_once(';').unwrap();
         
             let point: DataPoint = DataPoint {
@@ -48,9 +54,15 @@ fn main() {
 
             sender.send(point).expect("Cannot parse line");
         });
+
+        handles.push(handle);
     }
 
-    while let Ok(point) = rx.recv() {
+    for handle in handles {
+        handle.join().unwrap();
+    }
+
+    for point in rx.recv() {
     // for point in rx.recv() {
         let l: &mut LocationData = results.entry(point.location).or_insert(LocationData {
             min: 101.0,
