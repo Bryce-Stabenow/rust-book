@@ -2,53 +2,63 @@ use std::collections::BTreeMap;
 use std::fs::File;
 use std::io::prelude::*;
 use std::io::BufReader;
+use std::sync::mpsc;
+use std::thread;
 use std::time::Instant;
+
+struct LocationData {
+    min: f64,
+    max: f64,
+    total: f64,
+    count: u16,
+}
+
+impl LocationData {
+    fn mean(&self) -> f64 {
+        self.total / self.count as f64
+    }
+}
+
+struct DataPoint {
+    location: String,
+    temp: f64,
+}
 
 fn main() {
     let now = Instant::now();
 
-    struct LocationData {
-        min: f64,
-        max: f64,
-        total: f64,
-        count: u16,
-    }
-
-    impl LocationData {
-        fn mean(&self) -> f64 {
-            self.total / self.count as f64
-        }
-    }
-
-    struct DataPoint {
-        location: String,
-        temp: f64,
-    }
+    let (tx, rx) = mpsc::channel::<DataPoint>();
 
     let mut results: BTreeMap<String, LocationData> = BTreeMap::new();
 
     let data: File = File::open("data.txt").unwrap();
     let data: std::io::Lines<BufReader<File>> = BufReader::new(data).lines();
 
-    // TODO: Move this into threads, messages populate into tree and then output
     for line in data {
-        let line: String = line.unwrap();
-        let (location, temp) = line.split_once(';').unwrap();
+        let sender = tx.clone();
 
-        let point: DataPoint = DataPoint {
-            location: location.to_string(),
-            temp: temp.parse::<f64>().expect("invalid datapoint"),
-        };
+        thread::spawn(move || {
+            let line: String = line.unwrap();
+            let (location, temp) = line.split_once(';').unwrap();
+        
+            let point: DataPoint = DataPoint {
+                location: location.to_string(),
+                temp: temp.parse::<f64>().expect("invalid datapoint"),
+            };
 
-        // Once inside a thread, we don't need to calculate this out.
-        // We'll have the main thread take care of this work
+            sender.send(point).expect("Cannot parse line");
+        });
+    }
+
+    while let Ok(point) = rx.recv() {
+    // for point in rx.recv() {
         let l: &mut LocationData = results.entry(point.location).or_insert(LocationData {
             min: 101.0,
             max: -101.0,
             total: 0.0,
             count: 0,
         });
-
+    
         if l.min > point.temp {
             l.min = point.temp;
         }
@@ -69,5 +79,5 @@ fn main() {
         )
     }
 
-    println!("Runtime: {:.8?}", now.elapsed()); // Current runtime with data.txt = 4.73093950s
+    println!("Runtime: {:.8?}", now.elapsed()); // Current runtime with data.txt - Windows: 4.73093950s, Macbook: 1.13340832s
 }
