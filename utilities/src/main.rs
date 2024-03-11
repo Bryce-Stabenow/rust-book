@@ -25,3 +25,24 @@ fn warn_the_sheep(queue: &[&str]) -> String {
         None => "Error".to_string(),
     }
 }
+
+fn separate_even_and_odd_in_vec(xs: &[i16]) -> Vec<i16> {
+    let mut even: Vec<i16> = Vec::new();
+    let mut odd: Vec<i16> = Vec::new();
+    
+    for num in xs {
+        match num % 2 {
+            0 => even.push(num.clone()),
+            _ => odd.push(num.clone()),
+        }
+    }
+    
+    even.sort();
+    
+    odd.sort();
+    odd.reverse();
+    
+    even.append(&mut odd);
+    even.dedup();
+    
+    return even;}
