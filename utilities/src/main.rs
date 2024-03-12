@@ -45,4 +45,11 @@ fn separate_even_and_odd_in_vec(xs: &[i16]) -> Vec<i16> {
     even.append(&mut odd);
     even.dedup();
     
-    return even;}
+    return even;
+}
+
+fn build_square(n: i32) -> String{
+    (0 .. n)
+    .map(|_x| "+".repeat(n as usize))
+    .collect::<Vec<String>>().join("\n")
+}
