@@ -53,3 +53,13 @@ fn build_square(n: i32) -> String{
     .map(|_x| "+".repeat(n as usize))
     .collect::<Vec<String>>().join("\n")
 }
+
+/// # Returns the total angle degrees of any shape
+/// Since any shape can be divided into a minimum number of triangles
+/// we can determine the total degree of the angles by subtracting
+/// 2 from the total of sides, and multiplying by 180 deg.
+/// Ex. 6 sides on a hexagon, which can be divided into a minimum of 
+/// 4 triangles => (6-2) * 180 == 720.
+fn angle_finder(sides: usize) -> usize{
+    (sides - 2) * 180
+}
