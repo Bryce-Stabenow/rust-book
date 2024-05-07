@@ -67,3 +67,15 @@ fn build_square(n: i32) -> String {
 fn angle_finder(sides: usize) -> usize {
     (sides - 2) * 180
 }
+
+fn largest(n: usize, xs: &[i32]) -> Vec<i32> {
+    let mut answer: Vec<i32> = vec![];
+    let mut i: usize = n;
+
+    while i > 0 {
+        i = i - 1;
+        answer.push(xs[i]);
+    }
+
+    answer
+}
