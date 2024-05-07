@@ -83,3 +83,41 @@ fn largest(n: usize, xs: &[i32]) -> Vec<i32> {
 
     answer
 }
+
+struct Block {
+    width: u32,
+    length: u32,
+    height: u32,
+}
+
+impl Block {
+    fn new(arr: &[u32]) -> Self {
+        Block {
+            width: arr[0],
+            length: arr[1],
+            height: arr[2],
+        }
+    }
+
+    fn get_width(&self) -> u32 {
+        self.width
+    }
+
+    fn get_length(&self) -> u32 {
+        self.length
+    }
+
+    fn get_height(&self) -> u32 {
+        self.height
+    }
+
+    fn get_volume(&self) -> u32 {
+        self.height * self.length * self.width
+    }
+
+    fn get_surface_area(&self) -> u32 {
+        (2 * self.length * self.height)
+            + (2 * self.length * self.width)
+            + (2 * self.height * self.width)
+    }
+}
