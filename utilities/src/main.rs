@@ -127,3 +127,27 @@ fn flatten_and_sort(arr: &[Vec<i32>]) -> Vec<i32> {
     v.sort();
     v
 }
+
+fn part_list(v: Vec<&str>) -> String {
+    let mut answer = String::from("");
+    let last_idx = v.len() - 1;
+
+    for limit in 0..last_idx {
+        let mut substring = String::from("(");
+
+        for num in 0..v.len() {
+            substring.push_str(v[num]);
+
+            if num == limit {
+                substring.push_str(", ")
+            } else if num < last_idx {
+                substring.push(' ');
+            }
+        }
+
+        substring.push(')');
+        answer.push_str(&substring);
+    }
+
+    answer
+}
