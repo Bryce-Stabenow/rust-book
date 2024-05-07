@@ -70,11 +70,15 @@ fn angle_finder(sides: usize) -> usize {
 
 fn largest(n: usize, xs: &[i32]) -> Vec<i32> {
     let mut answer: Vec<i32> = vec![];
+    let mut new_vec = xs.to_owned();
+    new_vec.sort();
+    new_vec.reverse();
+
     let mut i: usize = n;
 
     while i > 0 {
         i = i - 1;
-        answer.push(xs[i]);
+        answer.push(new_vec[i]);
     }
 
     answer
