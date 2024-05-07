@@ -121,3 +121,9 @@ impl Block {
             + (2 * self.height * self.width)
     }
 }
+
+fn flatten_and_sort(arr: &[Vec<i32>]) -> Vec<i32> {
+    let mut v: Vec<i32> = arr.iter().flatten().copied().collect::<Vec<i32>>();
+    v.sort();
+    v
+}
