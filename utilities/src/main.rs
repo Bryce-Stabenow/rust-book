@@ -151,3 +151,21 @@ fn part_list(v: Vec<&str>) -> String {
 
     answer
 }
+
+// Sums arrays of abs(n) + 1 sequence
+fn sum_of_n(n: i32) -> Vec<i32> {
+    let mut answer = vec![0];
+    let limit = n.abs() + 1;
+    let mut total = 0;
+
+    for num in 1..limit {
+        match n < 0 {
+            true => total -= num,
+            false => total += num,
+        }
+
+        answer.push(total);
+    }
+
+    answer
+}
