@@ -169,3 +169,46 @@ fn sum_of_n(n: i32) -> Vec<i32> {
 
     answer
 }
+
+use std::collections::HashMap;
+
+fn to_leet_speak(s: &str) -> String {
+    let leet_map = get_leet_map();
+
+    s.chars()
+        .map(|c| leet_map.get(&c).unwrap_or(&' '))
+        .collect::<String>()
+}
+
+fn get_leet_map() -> HashMap<char, char> {
+    let mut leet_map: HashMap<char, char> = HashMap::new();
+
+    leet_map.insert('A', '@');
+    leet_map.insert('B', '8');
+    leet_map.insert('C', '(');
+    leet_map.insert('D', 'D');
+    leet_map.insert('E', '3');
+    leet_map.insert('F', 'F');
+    leet_map.insert('G', '6');
+    leet_map.insert('H', '#');
+    leet_map.insert('I', '!');
+    leet_map.insert('J', 'J');
+    leet_map.insert('K', 'K');
+    leet_map.insert('L', '1');
+    leet_map.insert('M', 'M');
+    leet_map.insert('N', 'N');
+    leet_map.insert('O', '0');
+    leet_map.insert('P', 'P');
+    leet_map.insert('Q', 'Q');
+    leet_map.insert('R', 'R');
+    leet_map.insert('S', '$');
+    leet_map.insert('T', '7');
+    leet_map.insert('U', 'U');
+    leet_map.insert('V', 'V');
+    leet_map.insert('W', 'W');
+    leet_map.insert('X', 'X');
+    leet_map.insert('Y', 'Y');
+    leet_map.insert('Z', '2');
+
+    leet_map
+}
