@@ -223,8 +223,8 @@ fn words_to_marks(s: &str) -> u32 {
 // If the two numbers are equal, return a or b.
 fn get_sum(a: i64, b: i64) -> i64 {
     if a < b {
-        (a..=b).collect::<Vec<i64>>().iter().sum::<i64>()
+        (a..=b).sum::<i64>()
     } else {
-        (b..=a).collect::<Vec<i64>>().iter().sum::<i64>()
+        (b..=a).sum::<i64>()
     }
 }
