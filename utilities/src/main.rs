@@ -217,3 +217,14 @@ fn get_leet_map() -> HashMap<char, char> {
 fn words_to_marks(s: &str) -> u32 {
     s.chars().map(|c| c as u32 - 96).sum()
 }
+
+// Given two integers a and b, which can be positive or negative,
+// find the sum of all the integers between and including them and return it.
+// If the two numbers are equal, return a or b.
+fn get_sum(a: i64, b: i64) -> i64 {
+    if a < b {
+        (a..=b).collect::<Vec<i64>>().iter().sum::<i64>()
+    } else {
+        (b..=a).collect::<Vec<i64>>().iter().sum::<i64>()
+    }
+}
